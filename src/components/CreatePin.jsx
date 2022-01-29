@@ -198,4 +198,4 @@ const CreatePin = ({ user }) => {
   );
 };
 
-export default CreatePin;
+export default CreatePin; 
