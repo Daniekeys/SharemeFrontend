@@ -15,7 +15,7 @@ const Login = () => {
     const doc = {
       _id: googleId,
       _type: 'user',
-      userName: response.profileObj.name,
+      userName: name,
       image: imageUrl,
     };
     client.createIfNotExists(doc).then(() => {
@@ -24,7 +24,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-start items-center flex-col h-screen">
+    <div className="flex justify-start items-center flex-col h-screen overflow-y-hidden">
       <div className=" relative w-full h-full">
         <video
           src={shareVideo}
