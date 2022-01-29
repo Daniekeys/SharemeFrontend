@@ -15,7 +15,7 @@ const Pin = ({pin: {postedBy, image, _id, destination,save}}) => {
     const navigate = useNavigate();
     const user = fetchUser(); 
 
-    const alreadySaved = !!(save?.filter((item) => item.postedBy._id === user.googleId))?.length;
+    const alreadySaved = !!(save?.filter((item) => item?.postedBy?._id === user?.googleId))?.length;
     // the above line will validate if the user is already saved  so there we are negating the value twice to get the actual result
     const savePin = (id) => {
         if(!alreadySaved) {
@@ -25,10 +25,10 @@ const Pin = ({pin: {postedBy, image, _id, destination,save}}) => {
             .setIfMissing({save: []})
             .insert('after', 'save[-1]', [{
                 _key: uuidv4(),
-                userId:user.googleId,
+                userId:user?.googleId,
                 postedBy: {
                     _type:'postedBy',
-                    _ref: user.googleId,
+                    _ref: user?.googleId,
                 },
             }])
             .commit()
@@ -57,7 +57,7 @@ className="relative cursor-zoom-in w-auto hover:shadow-lg overflow-hidden transi
         <div className="flex items-center justify-between">
         <div className="flex gap-2">
             <a href={`${image?.asset?.url}?dl=`}  
-            downLoad onClick={(e) => e.stopPropagation()}
+            download onClick={(e) => e.stopPropagation()}
             className="bg-white w-9 h-9 rounded-full flex items-center justify-center text-dark text-xl opacity-75 hover:opacity-100 hover:shadow-md outline-none">
             <MdDownloadForOffline className="text-gray-600 text-lg" />
             </a>
@@ -85,29 +85,32 @@ className="relative cursor-zoom-in w-auto hover:shadow-lg overflow-hidden transi
                 <a href={destination}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center bg-white p-2 font-bold text-black px-4 rounded-full opacity-75 hover:opacity-100 hover:shadow-md outline-none">
-                <BsFillArrowRightCircleFill className="text-gray-600 text-lg" />
-                {destination.length > 20 ? destination.slice(8, 17): destination.slice(8)}
-
+                className="flex items-center bg-white p-2 font-bold text-black px-4 rounded-full opacity-75 hover:opacity-100 hover:shadow-md outline-none w-4/6 overflow-x-hidden">
+                <BsFillArrowRightCircleFill className="text-gray-600 text-sm" />
+                {/* {destination.length > 20 ? destination.slice(8, 17): destination.slice(8)} */}
+                {destination}
                 </a>
             )}
-            {postedBy?._id === user.googleId && (
+            {postedBy?._id === user?.googleId && (
                 <button type="button"
                 onClick={(e) => {
                     e.stopPropagation()
                     deletePin(_id);
                 } }
-                className="bg-white text-dark font-bold text-base px-2 py-1 rounded-3xl hover:shadow-md outline-none">
+                className="bg-white  text-dark font-bold text-base px-2 py-1 rounded-3xl hover:shadow-md outline-none">
                     <AiTwotoneDelete />
                     </button>
             )}
         </div>
             </div>
+
     )}
  </div>   
     <Link 
     to={`user-profile/${postedBy?._id}`}
-    className="flex gap-2 items-center mt-2 ">
+    className="flex gap-2 items-center mt-2"
+    
+    >
     <img 
     className="w-8 h-8 rounded-full object-cover"
     src={postedBy?.image}
